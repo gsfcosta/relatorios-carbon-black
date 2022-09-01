@@ -76,7 +76,7 @@ def alarms(headers, cursor, cb_tenant, cb_url):
             device_name = device.lower()
         device_os = alarm["device_os"]
         device_os_version = alarm["device_os_version"]
-        alarm_status = alarm["workflow"]
+        alarm_status = alarm["workflow"]["state"]
         reason_code = alarm["reason_code"]
         description = alarm["reason"]
         process_name = alarm["process_name"]
