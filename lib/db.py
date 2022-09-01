@@ -13,7 +13,12 @@ def hosts(headers, cursor, cb_tenant, cb_url):
     response = json.loads(hosts.content)
     for host in response["results"]:
         id = str(host["id"])
-        device_name = host["name"]
+        try:
+            device = host["name"]
+            splited = device.split("\\")
+            device_name = splited[1]
+        except:
+            device_name = host["name"]
         device_os = host["os"]
         device_os_version = host["os_version"]
         sensor_version = host["sensor_version"]
