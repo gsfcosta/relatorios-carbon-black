@@ -10,7 +10,8 @@ def hosts(headers, cursor, cb_tenant, cb_url):
     criteria = {
         "criteria": {
             "status": ["ALL"]
-            }, 
+            },
+        "rows": 10000
         }
     hosts = requests.post(cb_url + "/appservices/v6/orgs/" + cb_tenant + "/devices/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
