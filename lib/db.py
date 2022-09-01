@@ -102,7 +102,7 @@ def vulns(headers, cursor, cb_tenant, cb_url):
     for vuln in response["results"]:
         device_os = vuln["os_info"]["os_name"]
         device_os_version = vuln["os_info"]["os_version"]
-        vuln_type = vuln["category "]
+        vuln_type = vuln["category"]
         vuln_app = vuln["product_info"]["product"]
         vuln_app_version = vuln["product_info"]["version"]
         vulnerability = vuln["vuln_info"]["cve_id"]
