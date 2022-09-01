@@ -107,7 +107,8 @@ def vulns(headers, cursor, cb_tenant, cb_url):
         vuln_app_version = vuln["product_info"]["version"]
         vulnerability = vuln["vuln_info"]["cve_id"]
         desc = vuln["vuln_info"]["cve_description"]
-        description = desc[0:100]
+        splited = desc.replace('"', "")
+        description = splited.replace("'", "")
         try:
             resolution = vuln["vuln_info"]["resolution"]
         except:
