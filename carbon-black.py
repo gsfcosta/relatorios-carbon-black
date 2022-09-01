@@ -32,5 +32,5 @@ try:
     else:
         print("Nenhuma função chamada")
 except BaseException as e:
-    print("Falha na conexão com o banco de dados. Erro: " + str(e))
+    print("Erro: " + str(e))
 

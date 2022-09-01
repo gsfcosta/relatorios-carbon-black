@@ -2,6 +2,10 @@ import requests,json
 from dateutil import parser
 
 def hosts(headers, cursor, cb_tenant, cb_url):
+    # Limpando Banco
+    query_insert = f"""truncate table dashboard_hosts"""
+    cursor.execute(query_insert)
+    cursor.commit()
     # Dados dos hosts
     criteria = {
         "criteria": {
@@ -10,6 +14,7 @@ def hosts(headers, cursor, cb_tenant, cb_url):
         }
     hosts = requests.post(cb_url + "/appservices/v6/orgs/" + cb_tenant + "/devices/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
+    found = (response['num_found'])
     for host in response["results"]:
         id = str(host["id"])
         try:
@@ -45,15 +50,20 @@ def hosts(headers, cursor, cb_tenant, cb_url):
             moderate = 0
             important = 0
             critical = 0
+        # Inserindo dados
         query_insert = f"""INSERT INTO dashboard_hosts(orgkey, device_id, device_name, device_os, device_os_version, sensor_version, sensor_status, registered_time, last_contact, vuln_critical, vuln_Important, vuln_moderate, vuln_low) 
                     VALUES 
                     ('{cb_tenant}', {id}, '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', {critical}, {moderate}, {important}, {low})"""
         cursor.execute(query_insert)
         cursor.commit()
-        print("Host ID: " + id + " inserido no DW")
+    print(found + " hosts inseridos!")
 
 
 def alarms(headers, cursor, cb_tenant, cb_url):
+    # Limpando Banco
+    query_insert = f"""truncate table dashboard_alarms"""
+    cursor.execute(query_insert)
+    cursor.commit()
     # Dados dos alarmes
     criteria = {
         "criteria": {
@@ -62,6 +72,7 @@ def alarms(headers, cursor, cb_tenant, cb_url):
         }
     hosts = requests.post(cb_url + "/appservices/v6/orgs/" + cb_tenant + "/alerts/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
+    found = (response['num_found'])
     for alarm in response["results"]:
         id = str(alarm["id"])
         try:
@@ -85,20 +96,26 @@ def alarms(headers, cursor, cb_tenant, cb_url):
         data = str(create.date())
         tempo = str(create.time().strftime("%H:%M:%S"))
         create_time = data + " " + tempo
+        # Inserindo dados
         query_insert = f"""INSERT INTO dashboard_alarms(orgkey, alarm_id, device_name, device_os, device_os_version, alarm_status, reason_code, description, process_name, policy_id, policy_name, severity, create_time) 
                     VALUES 
                     ('{cb_tenant}', '{id}', '{device_name}', '{device_os}', '{device_os_version}', '{alarm_status}', '{reason_code}', '{description}', '{process_name}', {policy_id}, '{policy_name}', {severity}, '{create_time}')"""
         cursor.execute(query_insert)
         cursor.commit()
-        print("Alarm ID: " + id + " inserido no DW")
+    print(found + " alarmes inseridos!")
 
 def vulns(headers, cursor, cb_tenant, cb_url):
+    # Limpando Banco
+    query_insert = f"""truncate table dashboard_vulnerability"""
+    cursor.execute(query_insert)
+    cursor.commit()
     # Dados dos alarmes
     criteria = {
         "start": 0
         }
     hosts = requests.post(cb_url + "/vulnerability/assessment/api/v1/orgs/" + cb_tenant + "/devices/vulnerabilities/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
+    found = (response['num_found'])
     for vuln in response["results"]:
         device_os = vuln["os_info"]["os_name"]
         device_os_version = vuln["os_info"]["os_version"]
@@ -117,22 +134,10 @@ def vulns(headers, cursor, cb_tenant, cb_url):
         endpoints = vuln["device_count"]
         severity = vuln["vuln_info"]["severity"]
         risk = vuln["vuln_info"]["risk_meter_score"]
-        # print(device_os)
-        # print(device_os_version)
-        # print(vuln_type)
-        # print(vuln_app)
-        # print(vuln_app_version)
-        # print(vulnerability)
-        # print(description)
-        # print(resolution)
-        # print(vuln_url)
-        # print(endpoints)
-        # print(severity)
-        # print(risk)
-        # print("\n")
+        # Inserindo dados
         query_insert = f"""INSERT INTO dashboard_vulnerability(orgkey, device_os, device_os_version, vuln_type, vuln_app, vuln_app_version, vulnerability, description, resolution, vuln_url, endpoints, severity, risk) 
                     VALUES 
                     ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', '{risk}')"""
         cursor.execute(query_insert)
         cursor.commit()
-        print("Vulnerabilidade " + vulnerability + " inserida no DW")
+    print(found + " vulnerabilidades inseridas!")
