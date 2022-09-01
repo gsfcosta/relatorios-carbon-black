@@ -56,7 +56,7 @@ def hosts(headers, cursor, cb_tenant, cb_url):
                     ('{cb_tenant}', {id}, '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', {critical}, {moderate}, {important}, {low})"""
         cursor.execute(query_insert)
         cursor.commit()
-    print(found + " hosts inseridos!")
+    print(str(found) + " hosts inseridos!")
 
 
 def alarms(headers, cursor, cb_tenant, cb_url):
@@ -102,7 +102,7 @@ def alarms(headers, cursor, cb_tenant, cb_url):
                     ('{cb_tenant}', '{id}', '{device_name}', '{device_os}', '{device_os_version}', '{alarm_status}', '{reason_code}', '{description}', '{process_name}', {policy_id}, '{policy_name}', {severity}, '{create_time}')"""
         cursor.execute(query_insert)
         cursor.commit()
-    print(found + " alarmes inseridos!")
+    print(str(found) + " alarmes inseridos!")
 
 def vulns(headers, cursor, cb_tenant, cb_url):
     # Limpando Banco
@@ -140,4 +140,4 @@ def vulns(headers, cursor, cb_tenant, cb_url):
                     ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', '{risk}')"""
         cursor.execute(query_insert)
         cursor.commit()
-    print(found + " vulnerabilidades inseridas!")
+    print(str(found) + " vulnerabilidades inseridas!")
