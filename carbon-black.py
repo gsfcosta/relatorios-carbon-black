@@ -27,6 +27,10 @@ try:
         hosts(headers, cursor, cb_tenant, cb_url)
     elif funcao == "alarms":
         alarms(headers, cursor, cb_tenant, cb_url)
+    elif funcao == "vulns":
+        vulns(headers, cursor, cb_tenant, cb_url)
+    else:
+        print("Nenhuma função chamada")
 except BaseException as e:
     print("Falha na conexão com o banco de dados. Erro: " + str(e))
 

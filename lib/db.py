@@ -7,7 +7,6 @@ def hosts(headers, cursor, cb_tenant, cb_url):
         "criteria": {
             "status": ["ALL"]
             }, 
-        "rows": 10000
         }
     hosts = requests.post(cb_url + "/appservices/v6/orgs/" + cb_tenant + "/devices/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
@@ -60,7 +59,6 @@ def alarms(headers, cursor, cb_tenant, cb_url):
         "criteria": {
             "minimum_severity": 1
             }, 
-        "rows": 10000
         }
     hosts = requests.post(cb_url + "/appservices/v6/orgs/" + cb_tenant + "/alerts/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
@@ -93,3 +91,34 @@ def alarms(headers, cursor, cb_tenant, cb_url):
         cursor.execute(query_insert)
         cursor.commit()
         print("Alarm ID: " + id + " inserido no DW")
+
+def vulns(headers, cursor, cb_tenant, cb_url):
+    # Dados dos alarmes
+    criteria = {
+        "start": 0
+        }
+    hosts = requests.post(cb_url + "/vulnerability/assessment/api/v1/orgs/" + cb_tenant + "/devices/vulnerabilities/_search", headers=headers, json=criteria)
+    response = json.loads(hosts.content)
+    for vuln in response["results"]:
+        id = str(vuln["id"])
+        device_os = vuln["os_info"]["os_name"]
+        device_os_version = vuln["os_info"]["os_version"]
+        vuln_type = vuln["category "]
+        vuln_app = vuln["product_info"]["product"]
+        vuln_app_version = vuln["product_info"]["version"]
+        vulnerability = vuln["vuln_info"]["cve_id"]
+        description = vuln["vuln_info"]["cve_description"]
+        try:
+            resolution = vuln["vuln_info"]["resolution"]
+        except:
+            resolution = "No Resolution Set"
+        vuln_url = vuln["vuln_info"]["nvd_link"]
+        endpoints = vuln["device_count"]
+        severity = vuln["vuln_info"]["severity"]
+        risk = vuln["vuln_info"]["risk_meter_score"]
+        query_insert = f"""INSERT INTO dashboard_vulnerability(orgkey, device_os, device_os_version, vuln_type, vuln_app, vuln_app_version, vulnerability, description, resolution, vuln_url, endpoints, severity, risk) 
+                    VALUES 
+                    ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', '{risk}')"""
+        cursor.execute(query_insert)
+        cursor.commit()
+        print("Vulnerabilidade " + id + " inserida no DW")
