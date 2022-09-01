@@ -70,6 +70,7 @@ def alarms(headers, cursor, cb_tenant, cb_url):
         "criteria": {
             "minimum_severity": 1
             }, 
+        "rows": 10000
         }
     hosts = requests.post(cb_url + "/appservices/v6/orgs/" + cb_tenant + "/alerts/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
