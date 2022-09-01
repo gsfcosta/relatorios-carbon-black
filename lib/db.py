@@ -115,22 +115,22 @@ def vulns(headers, cursor, cb_tenant, cb_url):
         endpoints = vuln["device_count"]
         severity = vuln["vuln_info"]["severity"]
         risk = vuln["vuln_info"]["risk_meter_score"]
-        print(device_os)
-        print(device_os_version)
-        print(vuln_type)
-        print(vuln_app)
-        print(vuln_app_version)
-        print(vulnerability)
-        print(description)
-        print(resolution)
-        print(vuln_url)
-        print(endpoints)
-        print(severity)
-        print(risk)
-        print("\n")
-        # query_insert = f"""INSERT INTO dashboard_vulnerability(orgkey, device_os, device_os_version, vuln_type, vuln_app, vuln_app_version, vulnerability, description, resolution, vuln_url, endpoints, severity, risk) 
-        #             VALUES 
-        #             ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', '{risk}')"""
-        # cursor.execute(query_insert)
-        # cursor.commit()
-        # print("Vulnerabilidade " + vulnerability + " inserida no DW")
+        # print(device_os)
+        # print(device_os_version)
+        # print(vuln_type)
+        # print(vuln_app)
+        # print(vuln_app_version)
+        # print(vulnerability)
+        # print(description)
+        # print(resolution)
+        # print(vuln_url)
+        # print(endpoints)
+        # print(severity)
+        # print(risk)
+        # print("\n")
+        query_insert = f"""INSERT INTO dashboard_vulnerability(orgkey, device_os, device_os_version, vuln_type, vuln_app, vuln_app_version, vulnerability, description, resolution, vuln_url, endpoints, severity, risk) 
+                    VALUES 
+                    ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', {risk})"""
+        cursor.execute(query_insert)
+        cursor.commit()
+        print("Vulnerabilidade " + vulnerability + " inserida no DW")
