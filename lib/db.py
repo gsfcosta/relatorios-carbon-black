@@ -106,7 +106,8 @@ def vulns(headers, cursor, cb_tenant, cb_url):
         vuln_app = vuln["product_info"]["product"]
         vuln_app_version = vuln["product_info"]["version"]
         vulnerability = vuln["vuln_info"]["cve_id"]
-        description = vuln["vuln_info"]["cve_description"]
+        # description = vuln["vuln_info"]["cve_description"]
+        description = "Testando descricao"
         try:
             resolution = vuln["vuln_info"]["resolution"]
         except:
@@ -130,7 +131,7 @@ def vulns(headers, cursor, cb_tenant, cb_url):
         # print("\n")
         query_insert = f"""INSERT INTO dashboard_vulnerability(orgkey, device_os, device_os_version, vuln_type, vuln_app, vuln_app_version, vulnerability, description, resolution, vuln_url, endpoints, severity, risk) 
                     VALUES 
-                    ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', {risk})"""
+                    ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', '{risk}')"""
         cursor.execute(query_insert)
         cursor.commit()
         print("Vulnerabilidade " + vulnerability + " inserida no DW")
