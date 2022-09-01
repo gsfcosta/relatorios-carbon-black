@@ -25,6 +25,8 @@ try:
     }
     if funcao == "hosts":
         hosts(headers, cursor, cb_tenant, cb_url)
+    elif funcao == "alarms":
+        alarms(headers, cursor, cb_tenant, cb_url)
 except BaseException as e:
     print("Falha na conexão com o banco de dados. Erro: " + str(e))
 

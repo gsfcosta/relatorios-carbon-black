@@ -16,9 +16,11 @@ def hosts(headers, cursor, cb_tenant, cb_url):
         try:
             device = host["name"]
             splited = device.split("\\")
-            device_name = splited[1]
+            splited = splited[1]
+            device_name = splited.lower()
         except:
-            device_name = host["name"]
+            device = host["name"]
+            device_name = device.lower()
         device_os = host["os"]
         device_os_version = host["os_version"]
         sensor_version = host["sensor_version"]
@@ -44,9 +46,50 @@ def hosts(headers, cursor, cb_tenant, cb_url):
             moderate = 0
             important = 0
             critical = 0
-        query_insert = f"""INSERT INTO dashboard_hosts(orgkey, device_name, device_os, device_os_version, sensor_version, sensor_status, registered_time, last_contact, vuln_critical, vuln_Important, vuln_moderate, vuln_low) 
+        query_insert = f"""INSERT INTO dashboard_hosts(orgkey, device_id, device_name, device_os, device_os_version, sensor_version, sensor_status, registered_time, last_contact, vuln_critical, vuln_Important, vuln_moderate, vuln_low) 
                     VALUES 
-                    ('{cb_tenant}', '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', {critical}, {moderate}, {important}, {low})"""
+                    ('{cb_tenant}', {id}, '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', {critical}, {moderate}, {important}, {low})"""
         cursor.execute(query_insert)
         cursor.commit()
         print("Host ID: " + id + " inserido no DW")
+
+
+def alarms(headers, cursor, cb_tenant, cb_url):
+    # Dados dos alarmes
+    criteria = {
+        "criteria": {
+            "minimum_severity": 1
+            }, 
+        "rows": 10000
+        }
+    hosts = requests.post(cb_url + "/appservices/v6/orgs/" + cb_tenant + "/alerts/_search", headers=headers, json=criteria)
+    response = json.loads(hosts.content)
+    for alarm in response["results"]:
+        id = str(alarm["id"])
+        try:
+            device = alarm["device_name"]
+            splited = device.split("\\")
+            splited = splited[1]
+            device_name = splited.lower()
+        except:
+            device = alarm["device_name"]
+            device_name = device.lower()
+        device_os = alarm["device_os"]
+        device_os_version = alarm["device_os_version"]
+        alarm_status = alarm["workflow"]
+        reason_code = alarm["reason_code"]
+        description = alarm["reason"]
+        process_name = alarm["process_name"]
+        policy_id = alarm["policy_id"]
+        policy_name = alarm["policy_name"]
+        severity = alarm["severity"]
+        create = parser.parse(alarm["create_time"])
+        data = str(create.date())
+        tempo = str(create.time().strftime("%H:%M:%S"))
+        create_time = data + " " + tempo
+        query_insert = f"""INSERT INTO dashboard_alarms(orgkey, alarm_id, device_name, device_os, device_os_version, alarm_status, reason_code, description, process_name, policy_id, policy_name, severity, create_time) 
+                    VALUES 
+                    ('{cb_tenant}', '{id}', '{device_name}', '{device_os}', '{device_os_version}', '{alarm_status}', '{reason_code}', '{description}', '{process_name}', {policy_id}, '{policy_name}', {severity}, '{create_time}')"""
+        cursor.execute(query_insert)
+        cursor.commit()
+        print("Alarm ID: " + id + " inserido no DW")
