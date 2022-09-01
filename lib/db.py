@@ -100,7 +100,6 @@ def vulns(headers, cursor, cb_tenant, cb_url):
     hosts = requests.post(cb_url + "/vulnerability/assessment/api/v1/orgs/" + cb_tenant + "/devices/vulnerabilities/_search", headers=headers, json=criteria)
     response = json.loads(hosts.content)
     for vuln in response["results"]:
-        id = str(vuln["id"])
         device_os = vuln["os_info"]["os_name"]
         device_os_version = vuln["os_info"]["os_version"]
         vuln_type = vuln["category "]
@@ -121,4 +120,4 @@ def vulns(headers, cursor, cb_tenant, cb_url):
                     ('{cb_tenant}', '{device_os}', '{device_os_version}', '{vuln_type}', '{vuln_app}', '{vuln_app_version}', '{vulnerability}', '{description}', '{resolution}', '{vuln_url}', {endpoints}, '{severity}', '{risk}')"""
         cursor.execute(query_insert)
         cursor.commit()
-        print("Vulnerabilidade " + id + " inserida no DW")
+        print("Vulnerabilidade " + vulnerability + " inserida no DW")
