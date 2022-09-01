@@ -23,7 +23,8 @@ try:
     'content-type': "application/json",
     'X-AUTH-TOKEN': cb_api_secret_key + "/" + cb_api_id,
     }
-    print (funcao(headers, cursor, cb_tenant, cb_url))
+    if funcao == "hosts":
+        hosts(headers, cursor, cb_tenant, cb_url)
 except BaseException as e:
     print("Falha na conexão com o banco de dados. Erro: " + str(e))
 
