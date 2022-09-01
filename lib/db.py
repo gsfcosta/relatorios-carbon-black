@@ -41,7 +41,7 @@ def hosts(headers, cursor, cb_tenant, cb_url):
             critical = 0
         query_insert = f"""INSERT INTO dashboard_hosts(orgkey, device_name, device_os, device_os_version, sensor_version, sensor_status, registered_time, last_contact, vuln_critical, vuln_Important, vuln_moderate, vuln_low) 
                     VALUES 
-                    ({cb_tenant}, '{device_name}', '{device_os}', '{device_os_version}', {sensor_version}, {sensor_status}, '{registered_time}', {last_contact_time}, {critical}, {moderate}, {important}, {low})"""
+                    ('{cb_tenant}', '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', {critical}, {moderate}, {important}, {low})"""
         cursor.execute(query_insert)
         cursor.commit()
         print("Host ID: " + id + " inserido no DW")
