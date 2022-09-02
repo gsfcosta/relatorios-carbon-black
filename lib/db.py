@@ -88,6 +88,10 @@ def alarms(headers, cursor, cb_tenant, cb_url):
         device_os = alarm["device_os"]
         device_os_version = alarm["device_os_version"]
         alarm_status = alarm["workflow"]["state"]
+        alarm_status_update = parser.parse(alarm["workflow"]["last_update_time"])
+        data = str(alarm_status_update.date())
+        tempo = str(alarm_status_update.time().strftime("%H:%M:%S"))
+        alarm_status_update_time = data + " " + tempo
         reason_code = alarm["reason_code"]
         description = alarm["reason"]
         process_name = alarm["process_name"]
@@ -99,9 +103,9 @@ def alarms(headers, cursor, cb_tenant, cb_url):
         tempo = str(create.time().strftime("%H:%M:%S"))
         create_time = data + " " + tempo
         # Inserindo dados
-        query_insert = f"""INSERT INTO dashboard_alarms(orgkey, alarm_id, device_name, device_os, device_os_version, alarm_status, reason_code, description, process_name, policy_id, policy_name, severity, create_time) 
+        query_insert = f"""INSERT INTO dashboard_alarms(orgkey, alarm_id, device_name, device_os, device_os_version, alarm_status, alarm_status_update_time, reason_code, description, process_name, policy_id, policy_name, severity, create_time) 
                     VALUES 
-                    ('{cb_tenant}', '{id}', '{device_name}', '{device_os}', '{device_os_version}', '{alarm_status}', '{reason_code}', '{description}', '{process_name}', {policy_id}, '{policy_name}', {severity}, '{create_time}')"""
+                    ('{cb_tenant}', '{id}', '{device_name}', '{device_os}', '{device_os_version}', '{alarm_status}', '{alarm_status_update_time}', '{reason_code}', '{description}', '{process_name}', {policy_id}, '{policy_name}', {severity}, '{create_time}')"""
         cursor.execute(query_insert)
         cursor.commit()
     print(str(found) + " alarmes inseridos!")
