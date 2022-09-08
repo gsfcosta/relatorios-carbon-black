@@ -30,6 +30,8 @@ def hosts(headers, cursor, cb_tenant, cb_url):
         device_os_version = host["os_version"]
         sensor_version = host["sensor_version"]
         sensor_status = host["status"]
+        policy_id = host["policy_id"]
+        policy_name = host["policy_name"]
         registered = parser.parse(host["registered_time"])
         data = str(registered.date())
         tempo = str(registered.time().strftime("%H:%M:%S"))
@@ -52,9 +54,9 @@ def hosts(headers, cursor, cb_tenant, cb_url):
             important = 0
             critical = 0
         # Inserindo dados
-        query_insert = f"""INSERT INTO dashboard_hosts(orgkey, device_id, device_name, device_os, device_os_version, sensor_version, sensor_status, registered_time, last_contact, vuln_critical, vuln_Important, vuln_moderate, vuln_low) 
+        query_insert = f"""INSERT INTO dashboard_hosts(orgkey, device_id, device_name, device_os, device_os_version, sensor_version, sensor_status, registered_time, last_contact, policy_id, policy_name, vuln_critical, vuln_Important, vuln_moderate, vuln_low) 
                     VALUES 
-                    ('{cb_tenant}', {id}, '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', {critical}, {moderate}, {important}, {low})"""
+                    ('{cb_tenant}', {id}, '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', '{policy_id}', {policy_name}, {critical}, {moderate}, {important}, {low})"""
         cursor.execute(query_insert)
         cursor.commit()
     print(str(found) + " hosts inseridos!")
