@@ -56,7 +56,7 @@ def hosts(headers, cursor, cb_tenant, cb_url):
         # Inserindo dados
         query_insert = f"""INSERT INTO dashboard_hosts(orgkey, device_id, device_name, device_os, device_os_version, sensor_version, sensor_status, registered_time, last_contact, policy_id, policy_name, vuln_critical, vuln_Important, vuln_moderate, vuln_low) 
                     VALUES 
-                    ('{cb_tenant}', {id}, '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', '{policy_id}', {policy_name}, {critical}, {moderate}, {important}, {low})"""
+                    ('{cb_tenant}', {id}, '{device_name}', '{device_os}', '{device_os_version}', '{sensor_version}', '{sensor_status}', '{registered_time}', '{last_contact_time}', {policy_id}, '{policy_name}', {critical}, {moderate}, {important}, {low})"""
         cursor.execute(query_insert)
         cursor.commit()
     print(str(found) + " hosts inseridos!")
