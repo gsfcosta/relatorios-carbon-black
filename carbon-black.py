@@ -8,7 +8,7 @@ funcao              = (sys.argv[1])
 db_hostname         = (sys.argv[2])
 db_username         = (sys.argv[3])
 db_password         = (sys.argv[4])
-db_name             = "carbonblack_stg"
+db_name             = "<db_name>"
 
 # CB vars
 cb_api_id           = (sys.argv[5])
